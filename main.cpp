@@ -5,6 +5,7 @@
 #include <thread>
 #include <pthread.h>
 #include <unistd.h>
+#include <EpollEvent.h>
 
 static int count = 0;
 
@@ -51,10 +52,12 @@ int main()
     sney::Mutex mt;
     sney::LockGuard ml(mt);
 
-    std::thread t1(safe_increment);
-    std::thread t2(safe_print);
+    ///std::thread t1(safe_increment);
+    //std::thread t2(safe_print);
 
-    sleep(1000);
+    //sleep(1000);
+    sney::EpollEvent e;
+    e.epollEventInit(10);
 
     return 0;
 }

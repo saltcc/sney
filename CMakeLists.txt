@@ -115,5 +115,5 @@ add_executable(sney ${src_list})
 include_directories(${sney_SOURCE_DIR}
                     ${sney_SOURCE_DIR}/sney)
 
-#target_link_libraries(sney sney_net)
+target_link_libraries(sney sney_net)
 target_link_libraries(sney -lpthread)

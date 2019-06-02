@@ -1,3 +1,5 @@
-set(net_srcs)
+set(net_srcs EpollEvent.cpp)
 
-#add_library(sney_net ${net_srcs})
+add_library(sney_net ${net_srcs})
+include_directories(${sney_SOURCE_DIR}
+                    ${sney_SOURCE_DIR}/sney)
