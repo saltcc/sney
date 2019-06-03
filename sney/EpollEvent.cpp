@@ -12,9 +12,11 @@ EpollEvent::~EpollEvent()
 
 }
 
-int EpollEvent::epollEventInit(int size)
+int EpollEvent::epollEventInit(int size, int ms)
 {
     _size = size;
+    _ms = ms;
+    _quit = true;
 
     _events = std::unique_ptr<epoll_event[]>(new epoll_event[size]);
     _fileEvent = std::unique_ptr<FileEvent[]>(new FileEvent[size]);
@@ -79,11 +81,11 @@ void EpollEvent::delEvent(int fd, int delmask)
     return;
 }
 
-int EpollEvent::wait(int ms)
+int EpollEvent::wait()
 {
     int retVal = 0;
 
-    retVal = epoll_wait(_efd, _events.get(), _size, ms);
+    retVal = epoll_wait(_efd, _events.get(), _size, _ms);
 
     if (retVal <= 0)
         return 0;
@@ -107,4 +109,35 @@ int EpollEvent::wait(int ms)
     }
 
     return retVal;
+}
+
+void EpollEvent::eventDispatch()
+{
+    _quit = false;
+
+    while (!_quit)
+    {
+        int numEvents = wait();
+
+        for (int i = 0; i < numEvents; ++i)
+        {
+            int fd = _readyEvent[i].fd;
+
+            FileEvent *fe = &_fileEvent[fd];         
+            int mask = _readyEvent[i].mask;
+
+            if (fe->mask & mask & E_READABLE)
+                fe->readFunc(fd, mask);
+
+            if (fe->mask & mask & E_WRITABLE)
+                fe->writeFunc(fd, mask);
+        }
+    }
+
+    return;
+}
+
+void EpollEvent::stop()
+{
+    _quit = true;
 }
