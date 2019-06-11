@@ -43,7 +43,7 @@ namespace sney
             int addEvent(int fd, int mask);
             void delEvent(int fd, int delmask);
             void eventDispatch();
-            void stop();
+            inline void stop();
         private:
             int _size;
             int _ms;
