@@ -19,10 +19,12 @@ namespace sney
 
             bool start();
             void stop();
-
             void join();
-
             void run();
+            void setThreadName(const std::string &name);
+            const std::string &getThreadName();
+            std::thread::id getThreadId() const;
+            EventLoop* getLoop() const;
 
         private:
 

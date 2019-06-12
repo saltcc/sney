@@ -65,3 +65,26 @@ void Thread::run()
 
     _loop->loop();
 }
+
+void Thread::setThreadName(const std::string &name)
+{
+    _name = name;
+}
+
+const std::string &Thread::getThreadName()
+{
+    return _name;
+}
+
+EventLoop* Thread::getLoop() const
+{
+    return _loop.get(); 
+}
+
+std::thread::id Thread::getThreadId() const
+{
+    if (_thread)
+        return _thread->get_id();
+
+    return std::thread::id();
+}
